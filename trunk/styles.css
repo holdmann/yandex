@@ -1,0 +1,62 @@
+body {
+	margin: 30px auto;
+	padding: 0;
+	width: 650px;
+	font: 75%/160% Verdana, Helvetica, sans-serif;
+	color: #333333;
+}
+a {
+	color: #FF3300;
+}
+
+a:focus {
+	outline: none;
+}
+
+.form {
+    text-align:center;
+}
+
+.form input.txt {
+    border:0;
+    border-bottom: 1px solid #999;
+    background: #FAFAFA;
+}
+
+.form input.smb {
+    border:0;
+    /*font-weight:bold;*/
+    background: #fff;
+    cursor:pointer;
+}
+
+
+.data ol li{
+    margin-top: 8px;
+}
+.data ol li a{
+    font-size:1.2em;
+}
+
+.data ul{
+    padding:0;
+    margin:0;
+}
+
+.data ul li{
+    list-style:none;
+    border-left: 4px solid #FAD2D2;
+    border-bottom: 1px solid #FAD2D2;
+    padding-left: 4px;
+    margin-left: 4px;
+    margin-top: 2px;
+}
+
+.error {
+	color: #FF3300;
+}
+
+.loading {  
+	border: 1px #999 dotted;
+    background: #FAFAD2 url(ajax-loader.gif) left top no-repeat;
+}   
