@@ -27,6 +27,13 @@ class Yandex
     protected $query;
     
     /**
+     * Host
+     *
+     * @var string
+     */
+    protected $host;
+    
+    /**
      * Number of page   
      *
      * @var integer
@@ -41,12 +48,19 @@ class Yandex
     protected $limit = 10;
     
     /**
+     * Sort By   rlv | tm
+     * 
+     * @see http://help.yandex.ru/xml/?id=316625#sort
+     * @var string
+     */
+    protected $sortby = 'rlv';
+    
+    /**
      * Options of search
      *
      * @var array
      */
     protected $options = array(
-        'sortby'                => null , // http://help.yandex.ru/xml/?id=316625#sort <rlv> <tm> 
         'maxpassages'           => null , // from 2 to 5
         'groupings'             => null , // http://help.yandex.ru/xml/?id=316625#group <d> <geo> <cat> <>
         'max-title-length'      => null , // 
@@ -175,6 +189,55 @@ class Yandex
 	 }
 	 
 	 /**
+	  * host
+	  *
+	  * @access  public
+	  * @param   integer   $string
+	  * @return  Yandex
+	  */
+	 public function host($host) 
+	 {
+	    $this->host = $host;
+	 	return $this;
+	 }
+	 
+	 /**
+	  * getHost
+	  *
+	  * @access  public
+	  * @return  string
+	  */
+	 public function getHost() 
+	 {
+	    return $this->host;
+	 }
+	 
+	 /**
+	  * sortby
+	  *
+	  * @access  public
+	  * @param   integer   $limit
+	  * @return  Yandex
+	  */
+	 public function sortby($sortby) 
+	 {
+        if ($sortby == 'rlv' || $sortby == 'tm')
+            $this->sortby = $sortby;
+        return $this;
+	 }
+	 
+	 /**
+	  * getSortby
+	  *
+	  * @access  public
+	  * @return  string
+	  */
+	 public function getSortby() 
+	 {
+	    return $this->sortby;
+	 }
+	 
+	 /**
 	  * set
 	  *
 	  * @access  public
@@ -205,7 +268,14 @@ class Yandex
 	 	$request  = '<?xml version="1.0" encoding="utf-8"?>
 	 	             <request>';	 	
 	 	// add query to request
-	 	$request .= '<query><![CDATA['.$this->query.']]></query>';
+	 	$query    = $this->query;
+	 	
+	 	// if isset "host"
+	 	if ($this->host) {
+	 	    $query .=  '<< host="'.$this->host.'"';	 	    
+	 	}
+	 	
+	 	$request .= '<query><![CDATA['.$query.']]></query>';
 	 	
 	 	if ($this->page) {
 	 	    $request .= '<page>'.$this->page.'</page>';
@@ -215,8 +285,9 @@ class Yandex
                         <groupby  attr="" mode="flat" groups-on-page="'.$this->limit.'" docs-in-group="1" curcateg="-1" />
                     </groupings>';
 	 	
-	 	// TODO: add groupings and sortby realisation
+	 	$request .= '<sortby order="descending" priority="yes">'.$this->sortby.'</sortby>';
 	 	
+	 	// TODO: add groupings and sortby realisation
 	 	/*
 	 	<sortby order="descending" priority="no">rlv</sortby>
 	 	
