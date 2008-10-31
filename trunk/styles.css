@@ -56,6 +56,25 @@ a:focus {
 	color: #FF3300;
 }
 
+.download {
+    width:100%;
+    margin: 4px 0;
+    padding:2px;
+    background-color:#FAFAD2;
+	border: 1px #FF3300 dotted;
+}
+
+.download code {
+    font-size:1.2em;
+    padding:4px;
+    display:block;
+}
+
+.copyright {
+    width:100%;
+    text-align:right;
+}
+
 .loading {  
 	border: 1px #999 dotted;
     background: #FAFAD2 url(ajax-loader.gif) left top no-repeat;
