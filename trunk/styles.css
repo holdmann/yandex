@@ -5,34 +5,53 @@ body {
 	font: 75%/160% Verdana, Helvetica, sans-serif;
 	color: #333333;
 }
-a {
-	color: #FF3300;
+
+a { color: #FF3300; }
+a:focus { outline: none; }
 }
 
-a:focus {
-	outline: none;
-}
+form {margin:0;padding:0;display:inline}
 
 .form {
-    text-align:center;
+    width:380px;
+    margin:0 auto;
+    padding:6px;
+    font-size:1.4em;
+    color:#555;
 }
-
+.form b {
+    color:#f55;
+}
 .form input.txt {
     border:0;
     border-bottom: 1px solid #999;
     background: #FAFAFA;
+    color:#555;
+    font-size:1.2em;
 }
 
 .form input.smb {
     border:0;
     /*font-weight:bold;*/
+    padding:0;
     background: #fff;
     cursor:pointer;
+    color:#555;
+    font-size:1.0em;
 }
 
-
-.data ol li{
+.data {
     margin-top: 8px;
+}
+.data ol li{
+    padding:6px;
+    background-color:#fff;
+	border: 1px #ddd solid;	
+    -moz-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    margin-bottom: 6px;
 }
 .data ol li a{
     font-size:1.2em;
@@ -45,11 +64,25 @@ a:focus {
 
 .data ul li{
     list-style:none;
-    border-left: 4px solid #FAD2D2;
-    border-bottom: 1px solid #FAD2D2;
+    border: 0 !important;
     padding-left: 4px;
     margin-left: 4px;
     margin-top: 2px;
+}
+.result {
+    color:#777;
+    font-size:1.4em;
+    padding:6px 40px;
+}
+.result span {
+    color:#333;
+    font-size:1.4em;
+}
+.pagebar {
+    width:380px;
+    font-size:1.4em;
+    padding:6px;
+    margin:0 auto
 }
 
 .error {
@@ -58,24 +91,25 @@ a:focus {
 
 .download {
     width:100%;
-    margin: 4px 0;
-    padding:2px;
+    margin: 6px 0;
+    padding:6px;
     background-color:#FAFAD2;
-	border: 1px #FF3300 dotted;
+	border: 1px #FF3300 dotted;	
+    -moz-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
 
 .download code {
     font-size:1.2em;
     padding:4px;
     display:block;
+    background-color:#FfFfee;
+    border:1px solid #eAeAD2;
 }
 
 .copyright {
     width:100%;
     text-align:right;
 }
-
-.loading {  
-	border: 1px #999 dotted;
-    background: #FAFAD2 url(ajax-loader.gif) left top no-repeat;
-}   
