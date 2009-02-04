@@ -16,6 +16,9 @@ if ($query) {
             -> host($host)                      // set host
             -> page($page)                      // set current page
             -> limit(10)                        // set page limit
+            //-> geo(187)                         // set geo region 
+            //-> cat(3728)                        // set category
+            
             -> set('max-title-length',   160)   // set some options
             -> set('max-passage-length', 200)
             -> request()                        // send request
@@ -40,30 +43,22 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query).'&host='.
 <div class="body">
     <div class="form">    
         <form>
-            Яндекс, <input type="text" name="query" class="txt" value="<?php echo $query;?>"/>, 
+            <span><b>Я</b>ндекс</span>, <input type="text" name="query" class="txt" value="<?php echo $query;?>"/>, 
             <input type="submit" class="smb" name="search" value="Ищи!"/>    
         </form>
     </div>
-    <div class="download">
-        Демонстрация работы PHP скрипта с поисковым сервисом Яндекс.XML.<br/>
-        Последняя версия всегда доступна на страницах Code Google:<br/>
-        <code>
-        <a href="http://code.google.com/p/yandex/downloads/list">http://code.google.com/p/yandex/downloads/list</a>
-        </code>
-    
-        Доступ к SVN репозиторию проекта:<br/>
-        <code>
-        svn checkout http://yandex.googlecode.com/svn/trunk/ yandex-read-only
-        </code>
-    </div>
+
     <div class="data">
         <?php 
             // if $Yandex exists and don't have errors in response
             if (isset($Yandex) && empty($Yandex->error)) : 
         ?>
-            Найдено: <?php echo $Yandex->total() .' ';
+        
+            <div class="result">
+            Найдено: <span><?php echo $Yandex->total() ?></span> 
+            <?php
             switch (true) {
-                case ($Yandex->total()%100 >= 5 && $Yandex->total()%100 < 20):
+                case ($Yandex->total() > 5 && $Yandex->total() < 20):
                     echo 'страниц';
                     break;
                 case ($Yandex->total()%10 == 1):
@@ -77,6 +72,7 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query).'&host='.
                     break;
             }
             ?> 
+            </div>
             <ol start="<?php echo $Yandex->getLimit()*$Yandex->getPage() + 1;?>">
             <?php foreach ($Yandex->result->response->results->grouping->group as $group) :?>
                 <li><a href="<?php echo $group->doc->url; ?>" title="<?php echo $group->doc->url; ?>" ><?php Yandex::highlight($group->doc->title); ?></a>
@@ -90,7 +86,7 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query).'&host='.
                 </li>
             <?php endforeach;?>
             </ol>
-            
+            <div class="pagebar">
             <?php foreach ($Yandex->pageBar() as $page => $value) : ;?>
                 <?php // switch statement for $value['type']
                 switch ($value['type']) {
@@ -114,17 +110,45 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query).'&host='.
                 .. |
                 <a href="<?php echo $url;?>&page=<?php echo $Yandex->getPage()+1;?>" title="Next Page">&raquo;</a>
             <?php endif; ?>
+            </div>
         <?php 
             // Error in response
             elseif(isset($Yandex) && isset($Yandex->error)):
         ?>
-            <div class="error">Возникла ошибка: <?php echo $Yandex->error; ?></div>
+            <div class="error"><?php echo $Yandex->error; ?></div>
         <?php endif; ?>
+    </div>
+    <div class="download">
+        Демонстрация работы PHP скрипта с поисковым сервисом Яндекс.XML.<br/>
+        Последняя версия всегда доступна на страницах Code Google:<br/>
+        <code>
+            <a href="http://code.google.com/p/yandex/downloads/list">http://code.google.com/p/yandex/downloads/list</a>
+        </code>
+    
+        Доступ к SVN репозиторию проекта:<br/>
+        <code>
+            svn checkout http://yandex.googlecode.com/svn/trunk/ yandex-read-only
+        </code>
+        
+        Для организации поиска по регионам или категориям смотрите коды на следующих страницах:
+        <ul>
+            <li><a href="http://search.yaca.yandex.ru/geo.c2n">Коды регионов</a></li>
+            <li><a href="http://search.yaca.yandex.ru/cat.c2n">Коды рубрик</a></li>
+        </ul>
     </div>
     <div class="copyright">
         &copy; 2008 <a href="http://anton.shevchuk.name" title="Anton Shevchuk">Anton Shevchuk</a><br/>
         Поиск реализован на основе <a href="http://xml.yandex.ru/" title="Яндекс.XML">Яндекс.XML</a>
     </div>
 </div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-7269638-9");
+pageTracker._trackPageview();
+} catch(err) {}</script>
 </body>
 </html>

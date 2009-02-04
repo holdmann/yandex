@@ -7,7 +7,8 @@
  * @author   Anton Shevchuk <AntonShevchuk@gmail.com>
  * @link     http://anton.shevchuk.name
  * @access   public
- * @package  Yandex.class.php
+ * @package  Yandex
+ * @version  0.4
  * @created  Thu Aug 14 12:12:54 EEST 2008
  */
 class Yandex 
@@ -32,6 +33,22 @@ class Yandex
      * @var string
      */
     protected $host;
+    
+    /**
+     * cat
+     *
+     * @see http://search.yaca.yandex.ru/cat.c2n
+     * @var integer
+     */
+    protected $cat;
+    
+    /**
+     * geo
+     *
+     * @see http://search.yaca.yandex.ru/geo.c2n
+     * @var integer
+     */
+    protected $geo;
     
     /**
      * Number of page   
@@ -90,32 +107,12 @@ class Yandex
         9 => 'Атрибут не проиндексирован — обратите внимание на корректность параметров зонно-атрибутивного поиска',
        10 => 'Атрибут и элемент не совместимы — обратите внимание на корректность параметров зонно-атрибутивного поиска',
        12 => 'Результат предыдущего запроса уже удален — задайте запрос повторно, не ссылаясь на идентификатор предыдущего запроса',
-       15 => 'Найдётся всё. Со временем',
+       15 => 'Искомая комбинация слов нигде не встречается',
        18 => 'Ошибка в XML-запросе — проверьте валидность отправляемого XML и корректность параметров',
        19 => 'Заданы несовместимые параметры запроса — проверьте корректность группировочных атрибутов',
        20 => 'Неизвестная ошибка — при повторяемости ошибки обратитесь к разработчикам с описанием проблемы',
     );
-    
-	/**
-	 * Constructor of Yandex
-	 *
-	 * @access  public
-	 */
-	function __construct() 
-	{
-		
-	}
-
-	/**
-	 * Destructor of Yandex 
-	 *
-	 * @access  public
-	 */
-	 function __destruct()
-	 {
-	 	
-	 }
-	
+    	
 	 /**
 	  * query
 	  *
@@ -192,7 +189,7 @@ class Yandex
 	  * host
 	  *
 	  * @access  public
-	  * @param   integer   $string
+	  * @param   string   $host
 	  * @return  Yandex
 	  */
 	 public function host($host) 
@@ -213,10 +210,58 @@ class Yandex
 	 }
 	 
 	 /**
+	  * cat
+	  *
+	  * @access  public
+	  * @param   integer   $cat
+	  * @return  Yandex
+	  */
+	 public function cat($cat) 
+	 {
+	    $this->cat = $cat;
+	 	return $this;
+	 }
+	 
+	 /**
+	  * getCat
+	  *
+	  * @access  public
+	  * @return  integer
+	  */
+	 public function getCat() 
+	 {
+	    return $this->cat;
+	 }
+	 
+	 /**
+	  * geo
+	  *
+	  * @access  public
+	  * @param   integer   $geo
+	  * @return  Yandex
+	  */
+	 public function geo($geo) 
+	 {
+	    $this->geo = $geo;
+	 	return $this;
+	 }
+	 
+	 /**
+	  * getGeo
+	  *
+	  * @access  public
+	  * @return  integer
+	  */
+	 public function getGeo() 
+	 {
+	    return $this->geo;
+	 }
+	 
+	 /**
 	  * sortby
 	  *
 	  * @access  public
-	  * @param   integer   $limit
+	  * @param   string   $sortby
 	  * @return  Yandex
 	  */
 	 public function sortby($sortby) 
@@ -265,27 +310,37 @@ class Yandex
 	         throw new Exception('Query is empty');
 	     }
 	     
-	 	$request  = '<?xml version="1.0" encoding="utf-8"?>
-	 	             <request>';	 	
+	 	$request  = '<?xml version="1.0" encoding="utf-8"?>'."\n".
+	 	             '<request>'."\n";	 	
 	 	// add query to request
 	 	$query    = $this->query;
 	 	
 	 	// if isset "host"
 	 	if ($this->host) {
-	 	    $query .=  '<< host="'.$this->host.'"';	 	    
+	 	    $query .=  '<< host="'.$this->host.'"';
 	 	}
 	 	
-	 	$request .= '<query><![CDATA['.$query.']]></query>';
+	 	// if isset "cat"
+	 	if ($this->cat) {
+	 	    $query .=  '<< cat=('.($this->cat+9000000).')';
+	 	}
+	 	
+	 	// if isset "geo"
+	 	if ($this->geo) {
+	 	    $query .=  '<< cat=('.($this->geo+11000000).')';
+	 	}
+	 	
+	 	$request .= '<query><![CDATA['.$query.']]></query>'."\n";
 	 	
 	 	if ($this->page) {
-	 	    $request .= '<page>'.$this->page.'</page>';
+	 	    $request .= '<page>'.$this->page.'</page>'."\n";
 	 	}
 	 	
-	 	$request .= '<groupings>
-                        <groupby  attr="" mode="flat" groups-on-page="'.$this->limit.'" docs-in-group="1" curcateg="-1" />
-                    </groupings>';
-	 	
-	 	$request .= '<sortby order="descending" priority="yes">'.$this->sortby.'</sortby>';
+	 	$request .= '<groupings>'."\n".
+                    '<groupby  attr="" mode="flat" groups-on-page="'.$this->limit.'" docs-in-group="1" curcateg="-1" />'."\n".
+                    '</groupings>';
+	 		 	
+	 	$request .= '<sortby order="descending" priority="yes">'.$this->sortby.'</sortby>'."\n";
 	 	
 	 	// TODO: add groupings and sortby realisation
 	 	/*
@@ -301,23 +356,23 @@ class Yandex
 	 	*/
 	 	
 	 	if ($this->options['maxpassages']) {
-	 	    $request .= '<maxpassages>'.$this->options['maxpassages'].'</maxpassages>';
+	 	    $request .= '<maxpassages>'.$this->options['maxpassages'].'</maxpassages>'."\n";
 	 	}
 	 	
 	 	if ($this->options['max-title-length']) {
-	 	    $request .= '<max-title-length>'.$this->options['max-title-length'].'</max-title-length>';
+	 	    $request .= '<max-title-length>'.$this->options['max-title-length'].'</max-title-length>'."\n";
 	 	}
 	 	
 	 	if ($this->options['max-headline-length']) {
-	 	    $request .= '<max-headline-length>'.$this->options['max-headline-length'].'</max-headline-length>';
+	 	    $request .= '<max-headline-length>'.$this->options['max-headline-length'].'</max-headline-length>'."\n";
 	 	}
 	 	
 	 	if ($this->options['max-passage-length']) {
-	 	    $request .= '<max-passage-length>'.$this->options['max-passage-length'].'</max-passage-length>';
+	 	    $request .= '<max-passage-length>'.$this->options['max-passage-length'].'</max-passage-length>'."\n";
 	 	}
 	 	
 	 	if ($this->options['max-text-length']) {
-	 	    $request .= '<max-text-length>'.$this->options['max-text-length'].'</max-text-length>';
+	 	    $request .= '<max-text-length>'.$this->options['max-text-length'].'</max-text-length>'."\n";
 	 	}
 	 	
 	 	
@@ -329,6 +384,7 @@ class Yandex
         curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Accept: application/xml"));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
         curl_setopt($ch, CURLOPT_POST, TRUE);    
@@ -345,19 +401,16 @@ class Yandex
 	  *
 	  * check response errors
 	  *
-	  * @author  dark
-	  * @class   
 	  * @access  public
-	  * @param   type     $param  param_descr
-	  * @return  rettype  return
+	  * @return  void
 	  */
 	 protected function checkErrors() 
 	 {
 	 	// switch statement for $this->result->response->error
 	 	switch (true) {	 	    
-	 		case isset($this->result->response->error) && 
-	 		    ($error = $this->result->response->error->attributes()->code || $this->result->response->error->attributes()->code === 0):
-	 		     $error = (int)$error;
+	 		case isset($this->result->response->error):
+	 		    // &&	($error = $this->result->response->error->attributes()->code[0] || $this->result->response->error->attributes()->code[0] === 0):
+	 		    $error = (int)$this->result->response->error->attributes()->code[0];
 	 		    if (isset($this->errors[$error])) {
 	 		        $this->error = $this->errors[$error];	 		        
 	 		    } else {
