@@ -45,7 +45,6 @@ form {margin:0;padding:0;display:inline}
 }
 .data ol li{
     padding:6px;
-    background-color:#fff;
 	border: 1px #ddd solid;	
     -moz-border-radius: 4px;
     -khtml-border-radius: 4px;
@@ -53,8 +52,15 @@ form {margin:0;padding:0;display:inline}
     border-radius: 4px;
     margin-bottom: 6px;
 }
+.data ol li:hover{
+    background-color:#fee;
+}
 .data ol li a{
+    display:block;
     font-size:1.2em;
+}
+.data ol li a.host{
+    font-size:1em;
 }
 
 .data ul{
