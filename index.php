@@ -16,8 +16,10 @@ if ($query) {
             -> host($host)                      // set host
             -> page($page)                      // set current page
             -> limit(10)                        // set page limit
-            //-> geo(187)                         // set geo region 
-            //-> cat(3728)                        // set category
+            //-> geo(187)                         // set geo region - http://search.yaca.yandex.ru/geo.c2n
+            //-> cat(3728)                        // set category - http://search.yaca.yandex.ru/cat.c2n
+            ->groupby(Yandex::GROUP_SITE,
+                      Yandex::GROUP_MODE_DEEP)
             
             -> set('max-title-length',   160)   // set some options
             -> set('max-passage-length', 200)
@@ -83,6 +85,7 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query).'&host='.
                         <?php endforeach;?>
                     </ul>
                     <?php endif; ?>
+                    <a href="<?php echo $group->doc->url; ?>" class="host" title="<?php echo $group->doc->url; ?>"><?php echo $group->doc->url; ?></a>
                 </li>
             <?php endforeach;?>
             </ol>

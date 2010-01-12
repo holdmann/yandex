@@ -8,7 +8,7 @@
  * @link     http://anton.shevchuk.name
  * @access   public
  * @package  Yandex
- * @version  0.4
+ * @version  0.5
  * @created  Thu Aug 14 12:12:54 EEST 2008
  */
 class Yandex 
@@ -65,12 +65,35 @@ class Yandex
     protected $limit = 10;
     
     /**
-     * Sort By   rlv | tm
+     * Sort By   'rlv' || 'tm'
      * 
      * @see http://help.yandex.ru/xml/?id=316625#sort
      * @var string
      */
+    const SORT_RLV = 'rlv'; // relevation
+    const SORT_TM  = 'tm';  // time modification
+    
     protected $sortby = 'rlv';
+    
+    /**
+     * Group By  '' || 'd'
+     *
+     * @see http://help.yandex.ru/xml/?id=316625#group
+     * @var string
+     */
+    const GROUP_DEFAULT = '';
+    const GROUP_SITE    = 'd'; // group by site
+    protected $groupby = '';
+    
+    /**
+     * Group mode   'flat' || 'deep'
+     *
+     * @var string
+     */
+    const GROUP_MODE_FLAT = 'flat';
+    const GROUP_MODE_DEEP = 'deep';
+    protected $groupby_mode = 'flat';
+    
     
     /**
      * Options of search
@@ -266,7 +289,7 @@ class Yandex
 	  */
 	 public function sortby($sortby) 
 	 {
-        if ($sortby == 'rlv' || $sortby == 'tm')
+        if ($sortby == Yandex::SORT_RLV || $sortby == Yandex::SORT_TM)
             $this->sortby = $sortby;
         return $this;
 	 }
@@ -280,6 +303,48 @@ class Yandex
 	 public function getSortby() 
 	 {
 	    return $this->sortby;
+	 }
+	 
+	 /**
+	  * groupby
+	  *
+	  * @access  public
+	  * @param   string   $groupby
+	  * @return  Yandex
+	  */
+	 public function groupby($groupby, $mode = Yandex::GROUP_MODE_FLAT) 
+	 {
+        if ($groupby == Yandex::GROUP_DEFAULT || $groupby == Yandex::GROUP_SITE) {
+            $this->groupby = $groupby;
+            if ($groupby == Yandex::GROUP_DEFAULT) {
+                $this->groupby_mode = Yandex::GROUP_MODE_FLAT;
+            } else {
+                $this->groupby_mode = $mode;
+            }
+        }
+        return $this;
+	 }
+	 
+	 /**
+	  * getGroupby
+	  *
+	  * @access  public
+	  * @return  string
+	  */
+	 public function getGroupby() 
+	 {
+	    return $this->groupby;
+	 }
+	 
+	 /**
+	  * getGroupbyMode
+	  *
+	  * @access  public
+	  * @return  string
+	  */
+	 public function getGroupbyMode() 
+	 {
+	    return $this->groupby_mode;
 	 }
 	 
 	 /**
@@ -337,14 +402,13 @@ class Yandex
 	 	}
 	 	
 	 	$request .= '<groupings>'."\n".
-                    '<groupby  attr="" mode="flat" groups-on-page="'.$this->limit.'" docs-in-group="1" curcateg="-1" />'."\n".
+                    '<groupby  attr="'.$this->groupby.'" mode="'.$this->groupby_mode.'" groups-on-page="'.$this->limit.'" docs-in-group="1" curcateg="-1" />'."\n".
                     '</groupings>';
 	 		 	
 	 	$request .= '<sortby order="descending" priority="yes">'.$this->sortby.'</sortby>'."\n";
 	 	
 	 	// TODO: add groupings and sortby realisation
 	 	/*
-	 	<sortby order="descending" priority="no">rlv</sortby>
 	 	
 	 	<groupings>
             <groupby attr="d" mode="deep" groups-on-page="10" docs-in-group="1" curcateg="-1"/>
