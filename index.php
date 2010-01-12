@@ -85,7 +85,7 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query).'&host='.
                         <?php endforeach;?>
                     </ul>
                     <?php endif; ?>
-                    <a href="<?php echo $group->doc->url; ?>" class="host" title="<?php echo $group->doc->url; ?>"><?php echo $group->doc->url; ?></a>
+                    <a href="<?php echo $group->doc->url; ?>" class="host" title="<?php echo $group->doc->url; ?>"><?php echo urldecode($group->doc->url); ?></a>
                 </li>
             <?php endforeach;?>
             </ol>
