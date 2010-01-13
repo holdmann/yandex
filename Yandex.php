@@ -389,17 +389,17 @@ class Yandex
          
          // if isset "host"
          if ($this->host) {
-             $query .=  '<< host="'.$this->host.'"';
+             $query .=  ' << host="'.$this->host.'"';
          }
          
          // if isset "cat"
          if ($this->cat) {
-             $query .=  '<< cat=('.($this->cat+9000000).')';
+             $query .=  ' << cat=('.($this->cat+9000000).')';
          }
          
          // if isset "geo"
          if ($this->geo) {
-             $query .=  '<< cat=('.($this->geo+11000000).')';
+             $query .=  ' << cat=('.($this->geo+11000000).')';
          }
          
          $xml -> addChild('query', $query);
@@ -552,18 +552,20 @@ class Yandex
       * highlight text
       *
       * @access  public
-      * @param   SimpleXML $text  
+      * @param   SimpleXML $xml  
       * @return  rettype   return
       */     
-     static function highlight($text) 
+     static function highlight($xml) 
      {
          // FIXME: very strangely method
-         $xml = $text->asXML();
+         $text = $xml->asXML();
          
-         $xml = str_replace('<hlword priority="strict">', '<b>', $xml);
-         $xml = str_replace('</hlword>', '</b>', $xml);
-         $xml = strip_tags($xml, '<b>');
          
-         echo $xml;
+         
+         $text = str_replace('<hlword>', '<strong>', $text);
+         $text = str_replace('</hlword>', '</strong>', $text);
+         $text = strip_tags($text, '<strong>');
+         
+         echo $text;
      }
 }
