@@ -5,8 +5,8 @@ require_once 'Yandex.php';
 $query = isset($_REQUEST['query'])?$_REQUEST['query']:'';
 $page  = isset($_REQUEST['page']) ?$_REQUEST['page']:0;
 $host  = isset($_REQUEST['host']) ?$_REQUEST['host']:null;
-$geo   = isset($_REQUEST['geo']) ?$_REQUEST['geo']:null; // 187 - Ukraine
-$cat   = isset($_REQUEST['cat']) ?$_REQUEST['cat']:null; // 3728
+$geo   = isset($_REQUEST['geo']) ?$_REQUEST['geo']:null;
+$cat   = isset($_REQUEST['cat']) ?$_REQUEST['cat']:null;
 
 
 if ($query) {
@@ -78,7 +78,7 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query).'&host='.
     </div>
     <!--<div class="request">
         <pre>
-        <?php //echo htmlentities($request, ENT_COMPAT, 'UTF-8');?>
+        <?php echo $request ?>
         </pre>
     </div>-->
     <div class="data">
@@ -109,8 +109,13 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query).'&host='.
             <ol start="<?php echo $Yandex->getLimit()*$Yandex->getPage() + 1;?>">
             <?php foreach ($Yandex->result->response->results->grouping->group as $group) :?>
                 <li><a href="<?php echo $group->doc->url; ?>" title="<?php echo $group->doc->url; ?>" ><?php Yandex::highlight($group->doc->title); ?></a>
+                    <?php if (isset($group->doc->headline)) : ?>
+                    <div class="headline">
+                        <?php echo $group->doc->headline; ?>
+                    </div>
+                    <?php endif; ?>
                     <?php if (isset($group->doc->passages->passage)) : ?>
-                    <ul>
+                    <ul class="passages">
                         <?php foreach ($group->doc->passages->passage as $passage) :?>
                         <li><?php Yandex::highlight($passage);?></li>                    
                         <?php endforeach;?>
