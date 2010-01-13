@@ -22,7 +22,11 @@ form {margin:0;padding:0;display:inline}
 .form b {
     color:#f55;
 }
+.form select {
+    width:180px;
+}
 .form input.txt {
+    width:180px;
     border:0;
     border-bottom: 1px solid #999;
     background: #FAFAFA;

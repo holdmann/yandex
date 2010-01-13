@@ -5,6 +5,8 @@ require_once 'Yandex.php';
 $query = isset($_REQUEST['query'])?$_REQUEST['query']:'';
 $page  = isset($_REQUEST['page']) ?$_REQUEST['page']:0;
 $host  = isset($_REQUEST['host']) ?$_REQUEST['host']:null;
+$geo   = isset($_REQUEST['geo']) ?$_REQUEST['geo']:null; // 187 - Ukraine
+$cat   = isset($_REQUEST['cat']) ?$_REQUEST['cat']:null; // 3728
 
 
 if ($query) {
@@ -16,15 +18,17 @@ if ($query) {
             -> host($host)                      // set host
             -> page($page)                      // set current page
             -> limit(10)                        // set page limit
-            //-> geo(187)                         // set geo region - http://search.yaca.yandex.ru/geo.c2n
-            //-> cat(3728)                        // set category - http://search.yaca.yandex.ru/cat.c2n
-            ->groupby(Yandex::GROUP_SITE,
+            -> geo($geo)                        // set geo region - http://search.yaca.yandex.ru/geo.c2n
+            -> cat($cat)                        // set category - http://search.yaca.yandex.ru/cat.c2n
+            -> sortby(Yandex::SORT_RLV)
+            -> groupby(Yandex::GROUP_SITE,
                       Yandex::GROUP_MODE_DEEP)
             
             -> set('max-title-length',   160)   // set some options
             -> set('max-passage-length', 200)
             -> request()                        // send request
             ;
+    $request = $Yandex -> getRequest()->asXml();
 }
 
 // current URL
@@ -45,11 +49,38 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query).'&host='.
 <div class="body">
     <div class="form">    
         <form>
-            <span><b>Я</b>ндекс</span>, <input type="text" name="query" class="txt" value="<?php echo $query;?>"/>, 
-            <input type="submit" class="smb" name="search" value="Ищи!"/>    
+            <span><b>Я</b>ндекс</span>,&nbsp;<input type="text" name="query" class="txt" value="<?php echo $query;?>"/>, 
+            <input type="submit" class="smb" name="search" value="Ищи!"/><br /><br />
+            
+            <span>Регион</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="geo">
+                <option value="">Все</option>
+                <optgroup label="Город">
+                    <option value="213" <?php if ($geo == 213) echo 'selected="selected"'?>>Москва</option>
+                    <option value="2"   <?php if ($geo == 2)   echo 'selected="selected"'?>>Санкт-Петербург</option>
+                    <option value="143" <?php if ($geo == 143) echo 'selected="selected"'?>>Киев</option>
+                    <option value="157" <?php if ($geo == 157) echo 'selected="selected"'?>>Минск</option>
+                </optgroup>
+                <optgroup label="Страна">
+                    <option value="225" <?php if ($geo == 225) echo 'selected="selected"'?>>Россия</option>
+                    <option value="187" <?php if ($geo == 187) echo 'selected="selected"'?>>Украина</option>
+                    <option value="149" <?php if ($geo == 149) echo 'selected="selected"'?>>Беларусь</option>
+                </optgroup>
+            </select><br />
+            <span>Категория</span>:&nbsp;<select name="cat">
+                <option value="">Все</option>
+                <option value="5"    <?php if ($cat == 5) echo 'selected="selected"'?>>Интернет</option>
+                <option value="3795" <?php if ($cat == 3795) echo 'selected="selected"'?>>Кино</option>
+                <option value="3796" <?php if ($cat == 3796) echo 'selected="selected"'?>>Музыка</option>
+                <option value="3797" <?php if ($cat == 3797) echo 'selected="selected"'?>>Литература</option>
+                <option value="3798" <?php if ($cat == 3798) echo 'selected="selected"'?>>Фото</option>
+            </select>
         </form>
     </div>
-
+    <!--<div class="request">
+        <pre>
+        <?php //echo htmlentities($request, ENT_COMPAT, 'UTF-8');?>
+        </pre>
+    </div>-->
     <div class="data">
         <?php 
             // if $Yandex exists and don't have errors in response
