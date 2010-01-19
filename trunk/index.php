@@ -19,6 +19,7 @@ if ($query) {
             -> page($page)                      // set current page
             -> limit(10)                        // set page limit
             -> geo($geo)                        // set geo region - http://search.yaca.yandex.ru/geo.c2n
+//            -> lr($geo)                         // set lr option
             -> cat($cat)                        // set category - http://search.yaca.yandex.ru/cat.c2n
             -> sortby(Yandex::SORT_RLV)
             -> groupby(Yandex::GROUP_SITE,

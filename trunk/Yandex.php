@@ -8,7 +8,7 @@
  * @link     http://anton.shevchuk.name
  * @access   public
  * @package  Yandex
- * @version  0.6
+ * @version  0.7
  * @created  Thu Aug 14 12:12:54 EEST 2008
  */
 class Yandex 
@@ -56,6 +56,13 @@ class Yandex
      * @var integer
      */
     protected $geo;
+    
+    /**
+     * lr
+     * 
+     * @var integer
+     */
+    protected $lr;
     
     /**
      * Number of page   
@@ -288,6 +295,30 @@ class Yandex
      }
      
      /**
+      * lr
+      *
+      * @access  public
+      * @param   integer   $lr
+      * @return  Yandex
+      */
+     public function lr($lr) 
+     {
+        $this->lr = $lr;
+        return $this;
+     }
+     
+     /**
+      * getLr
+      *
+      * @access  public
+      * @return  integer
+      */
+     public function getLr() 
+     {
+        return $this->lr;
+     }
+     
+     /**
       * sortby
       *
       * @access  public
@@ -420,8 +451,14 @@ class Yandex
          
         $this->request = $xml;
         
-        $ch = curl_init();    
-        curl_setopt($ch, CURLOPT_URL, "http://xmlsearch.yandex.ru/xmlsearch");
+        $ch = curl_init();
+        
+        if ($this->lr) {
+            curl_setopt($ch, CURLOPT_URL, "http://xmlsearch.yandex.ru/xmlsearch?lr=".$this->lr);
+        } else {
+            curl_setopt($ch, CURLOPT_URL, "http://xmlsearch.yandex.ru/xmlsearch");
+        }
+        
         curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: application/xml"));
         curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Accept: application/xml"));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -559,8 +596,6 @@ class Yandex
      {
          // FIXME: very strangely method
          $text = $xml->asXML();
-         
-         
          
          $text = str_replace('<hlword>', '<strong>', $text);
          $text = str_replace('</hlword>', '</strong>', $text);
