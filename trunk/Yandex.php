@@ -8,7 +8,7 @@
  * @link     http://anton.shevchuk.name
  * @access   public
  * @package  Yandex
- * @version  0.7
+ * @version  0.8
  * @created  Thu Aug 14 12:12:54 EEST 2008
  */
 class Yandex 
@@ -415,13 +415,23 @@ class Yandex
               
         $xml = new SimpleXMLElement("<?xml version='1.0' encoding='utf-8'?><request></request>");
              
-         // add query to request
-         $query    = $this->query;
+        // add query to request
+        $query    = $this->query;
          
-         // if isset "host"
-         if ($this->host) {
-             $query .=  ' << host="'.$this->host.'"';
-         }
+        // if isset "host"
+        if ($this->host) {
+            if (is_array($this->host)) {
+                $host_query = '(host="'.join($this->host, '"|host="') .'")';
+            } else {
+                $host_query = 'host="'.$this->host.'"';
+            }
+            
+            if (!empty($query) && $this->host) {
+                $query .=  ' << '.$host_query;
+            } elseif (empty($query) && $this->host) {
+                $query .=  $host_query;
+            }
+        }
          
          // if isset "cat"
          if ($this->cat) {

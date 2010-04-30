@@ -15,11 +15,11 @@ if ($query) {
     
     // Set Query
     $Yandex -> query($query)
-            -> host($host)                      // set host
+            -> host($host)                      // set one host or multihost
+            // -> host(array('anton.shevchuk.name','cotoha.info')) 
             -> page($page)                      // set current page
             -> limit(10)                        // set page limit
             -> geo($geo)                        // set geo region - http://search.yaca.yandex.ru/geo.c2n
-//            -> lr($geo)                         // set lr option
             -> cat($cat)                        // set category - http://search.yaca.yandex.ru/cat.c2n
             -> sortby(Yandex::SORT_RLV)
             -> groupby(Yandex::GROUP_SITE,
