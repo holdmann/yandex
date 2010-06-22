@@ -7,6 +7,7 @@ $page  = isset($_REQUEST['page']) ?$_REQUEST['page']:0;
 $host  = isset($_REQUEST['host']) ?$_REQUEST['host']:null;
 $geo   = isset($_REQUEST['geo']) ?$_REQUEST['geo']:null;
 $cat   = isset($_REQUEST['cat']) ?$_REQUEST['cat']:null;
+$theme = isset($_REQUEST['theme']) ?$_REQUEST['theme']:null;
 
 
 if ($query) {
@@ -21,6 +22,7 @@ if ($query) {
             -> limit(10)                        // set page limit
             -> geo($geo)                        // set geo region - http://search.yaca.yandex.ru/geo.c2n
             -> cat($cat)                        // set category - http://search.yaca.yandex.ru/cat.c2n
+            -> theme($theme)                    // set theme - http://help.yandex.ru/site/?id=1111797
             -> sortby(Yandex::SORT_RLV)
             -> groupby(Yandex::GROUP_SITE,
                       Yandex::GROUP_MODE_DEEP)
