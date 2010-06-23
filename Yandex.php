@@ -506,14 +506,14 @@ class Yandex
             curl_setopt($ch, CURLOPT_URL, "http://xmlsearch.yandex.ru/xmlsearch");
         }
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: application/xml"));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Accept: application/xml"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept: application/xml"));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml->asXML());
-        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POST, true);
         $data = curl_exec($ch);
 
         $this->result = new SimpleXMLElement($data);
