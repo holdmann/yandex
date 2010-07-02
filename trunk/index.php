@@ -105,7 +105,7 @@ $url = $server .'?query='.urlencode($query)
             </div>
             <ol start="<?php echo $Yandex->getLimit()*$Yandex->getPage() + 1;?>">
             <?php foreach ($Yandex->results() as $result) :?>
-                <li><a href="<?php echo $result->url; ?>" title="<?php echo $result->url; ?>" ><?php Yandex::highlight($result->title); ?></a>
+                <li><a href="<?php echo $result->url; ?>" title="<?php echo $result->url; ?>" class="title"><?php Yandex::highlight($result->title); ?></a>
                     <?php if ($result->headline) : ?>
                     <div class="headline">
                         <?php echo $result->headline; ?>
@@ -118,7 +118,7 @@ $url = $server .'?query='.urlencode($query)
                         <?php endforeach;?>
                     </ul>
                     <?php endif; ?>
-                    <a href="<?php echo $result->url; ?>" class="host" title="<?php echo $result->url; ?>"><?php echo $result->domain; ?></a> | 
+                    <a href="<?php echo $result->url; ?>" class="host" title="<?php echo $result->url; ?>"><?php echo $result->domain; ?></a> 
                     <a href="<?php echo $server .'?query='.urlencode($query).'&host='. urlencode($result->domain)?>" class="host" title="Поиск на сайте <?php echo $result->domain; ?>">ещё</a>
                 </li>
             <?php endforeach;?>
