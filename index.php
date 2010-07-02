@@ -36,7 +36,7 @@ if ($query) {
 
 // current URL
 $server = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-$server = substr($server, 0, strpos($server, '?'))
+$server = substr($server, 0, strpos($server, '?'));
 $url = $server .'?query='.urlencode($query)
                .'&host='.urlencode($host)
                .'&geo='.urlencode($geo)
