@@ -106,6 +106,7 @@ fieldset img{
 .data ol li a.host{
     color:#999;
     font-size:0.6em;
+    display:inline;
 }
 
 .data ul{
