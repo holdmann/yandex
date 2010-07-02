@@ -35,14 +35,14 @@ if ($query) {
 }
 
 // current URL
-$url = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-$url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query)
-                                          .'&host='.urlencode($host)
-                                          .'&geo='.urlencode($geo)
-                                          .'&cat='.urlencode($cat)
-                                          .'&theme='.urlencode($theme)
-                                           
-                                           ;
+$server = "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+$server = substr($server, 0, strpos($server, '?'))
+$url = $server .'?query='.urlencode($query)
+               .'&host='.urlencode($host)
+               .'&geo='.urlencode($geo)
+               .'&cat='.urlencode($cat)
+               .'&theme='.urlencode($theme)
+               ;
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-transitional.dtd">
@@ -118,7 +118,8 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query)
                         <?php endforeach;?>
                     </ul>
                     <?php endif; ?>
-                    <a href="<?php echo $result->url; ?>" class="host" title="<?php echo $result->url; ?>"><?php echo urldecode($result->url); ?></a>
+                    <a href="<?php echo $result->url; ?>" class="host" title="<?php echo $result->url; ?>"><?php echo $result->domain; ?></a> | 
+                    <a href="<?php echo $server .'?query='.urlencode($query).'&host='. urlencode($result->domain)?>" class="host" title="Поиск на сайте <?php echo $result->domain; ?>">ещё</a>
                 </li>
             <?php endforeach;?>
             </ol>
