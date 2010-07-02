@@ -4,11 +4,16 @@ body {
 	width: 650px;
 	font: 75%/160% Verdana, Helvetica, sans-serif;
 	color: #333333;
+	background: #EEE; /* for non-css3 browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#ffffff'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FFF)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #EEE,  #FFF); /* for firefox 3.6+ */
 }
 
-a { color: #FF3300; }
+a { color: #FF3300; outline: none; }
 a:focus { outline: none; }
-}
+
+img {border:0}
 
 form {margin:0;padding:0;display:inline}
 
@@ -20,6 +25,7 @@ form {margin:0;padding:0;display:inline}
     color:#555;
 }
 .form b {
+    font-size:1.4em;
     color:#f55;
 }
 .form select {
@@ -43,28 +49,63 @@ form {margin:0;padding:0;display:inline}
     color:#555;
     font-size:1.0em;
 }
-
-.data {
-    margin-top: 8px;
-}
-.data ol li{
-    padding:6px;
-	border: 1px #ddd solid;	
+fieldset {
+    background:#fff;
+    border:1px solid #ccc;
+    border-radius: 4px;
     -moz-border-radius: 4px;
     -khtml-border-radius: 4px;
     -webkit-border-radius: 4px;
+    box-shadow:0 0 4px #CCC;
+    -moz-box-shadow:0 0 4px #CCC;
+    -webkit-box-shadow:0 0 4px #CCC;
+    padding:10px
+}
+
+fieldset img{
+    margin:0 0 -16px -22px;
+}
+.data {
+    margin-top: 8px;
+}
+.data ol{
+    padding-left:20px;
+}
+.data ol li{
+    font-size:20px;
+    color:#999;
+    padding:8px;
+	border: 1px #ddd solid;	
     border-radius: 4px;
+    -moz-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    -webkit-border-radius: 4px;
     margin-bottom: 6px;
 }
+.data ol li * {
+    font-size:14px !important;
+}
+.data ol li li {
+    color:#333333;
+    font-size:14px !important;
+}
+.data ol > li{
+    background:#fff;
+    box-shadow:0 0 4px #CCC;
+    -moz-box-shadow:0 0 4px #CCC;
+    -webkit-box-shadow:0 0 4px #CCC;
+}
 .data ol li:hover{
-    background-color:#fee;
+    background-color:#FFFFDD;
 }
 .data ol li a{
     display:block;
+    text-indent:8px;
     font-size:1.2em;
 }
 .data ol li a.host{
-    font-size:1em;
+    color:#999;
+    font-size:0.6em;
 }
 
 .data ul{
@@ -83,6 +124,7 @@ form {margin:0;padding:0;display:inline}
     color:#777;
     font-size:1.4em;
     padding:6px 40px;
+    text-align:center;
 }
 .result span {
     color:#333;
@@ -102,9 +144,12 @@ form {margin:0;padding:0;display:inline}
 .download {
     width:100%;
     margin: 6px 0;
-    padding:6px;
-    background-color:#FAFAD2;
-	border: 1px #FF3300 dotted;	
+    padding:8px;
+    background-color:#FFFFCC;
+    box-shadow:0 0 2px #EE5555;
+    -moz-box-shadow:0 0 2px #EE5555;
+    -webkit-box-shadow:0 0 2px #EE5555;
+	border: 1px #EE5555 solid;	
     -moz-border-radius: 4px;
     -khtml-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -113,7 +158,7 @@ form {margin:0;padding:0;display:inline}
 
 .download code {
     font-size:1.2em;
-    padding:4px;
+    padding:4px 8px;
     display:block;
     background-color:#FfFfee;
     border:1px solid #eAeAD2;

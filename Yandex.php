@@ -18,7 +18,28 @@ class Yandex
      *
      * @var SimpleXML
      */
-    public $result;
+    public $response;
+    
+    /**
+     * Response in array
+     *
+     * @var Array
+     */
+    public $results = array();
+    
+    /**
+     * Total results
+     *
+     * @var integer
+     */
+    public $total = null;
+    
+    /**
+     * Total results in human form
+     *
+     * @var string
+     */
+    public $totalHuman = null;
 
     /**
      * Query
@@ -441,7 +462,9 @@ class Yandex
      */
     public function request()
     {
-        if (empty($this->query)) {
+        if (empty($this->query)
+            && empty($this->host)
+            ) {
             throw new Exception('Query is empty');
         }
 
@@ -516,7 +539,8 @@ class Yandex
         curl_setopt($ch, CURLOPT_POST, true);
         $data = curl_exec($ch);
 
-        $this->result = new SimpleXMLElement($data);
+        $this->response = new SimpleXMLElement($data);
+        $this->response = $this->response->response;
         $this->checkErrors();
 
         return $this;
@@ -544,20 +568,20 @@ class Yandex
      */
     protected function checkErrors()
     {
-        // switch statement for $this->result->response->error
+        // switch statement for $this->response->error
         switch (true) {
-            case isset($this->result->response->error):
-                // &&    ($error = $this->result->response->error->attributes()->code[0] || $this->result->response->error->attributes()->code[0] === 0):
-                $error = (int)$this->result->response->error->attributes()->code[0];
+            case isset($this->response->error):
+                // &&    ($error = $this->response->error->attributes()->code[0] || $this->response->error->attributes()->code[0] === 0):
+                $error = (int)$this->response->error->attributes()->code[0];
                 if (isset($this->errors[$error])) {
                     $this->error = $this->errors[$error];
                 } else {
-                    $this->error = $this->result->response->error;
+                    $this->error = $this->response->error;
                 }
                 break;
 
-            case isset($this->result->response->error) && !empty($this->result->response->error):
-                $this->error = $this->result->response->error;
+            case isset($this->response->error) && !empty($this->response->error):
+                $this->error = $this->response->error;
                 break;
 
             default:
@@ -567,8 +591,6 @@ class Yandex
     }
 
     /**
-     * total
-     *
      * get total results
      * 
      * @access  public
@@ -576,12 +598,26 @@ class Yandex
      */
     public function total()
     {
-        // FIXME: need fix?
-        if (empty($this->total)) {
-            $res = $this->result->xpath('response/found[attribute::priority="all"]');
+        if ($this->total === null) {
+            $res = $this->response->xpath('found[attribute::priority="all"]');
             $this->total = (int)$res[0];
         }
         return $this->total;
+    }
+
+    /**
+     * get total results in human form
+     * 
+     * @access  public
+     * @return  integer
+     */
+    public function totalHuman()
+    {
+        if ($this->totalHuman === null) {
+            $res = $this->response->xpath('found-human');
+            $this->totalHuman = $res[0];
+        }
+        return $this->totalHuman;
     }
 
     /**
@@ -595,9 +631,35 @@ class Yandex
      */
     public function pages()
     {
-        if (empty($this->pages))
-        $this->pages = ceil($this->total() / $this->limit);
+        if (empty($this->pages)) {
+            $this->pages = ceil($this->total() / $this->limit);
+        }
         return $this->pages;
+    }
+    
+    /**
+     * return associated array of groups
+     *
+     * @return  array
+     */
+    public function results() 
+    {
+        if (empty($this->results)) {
+            if (empty($this->error) && $this->response) {
+                foreach ($this->response->results->grouping->group as $group) {
+                    $res = new stdClass();
+                    $res ->url       = $group->doc->url;
+                    $res ->domain    = $group->doc->domain;
+                    $res ->title     = isset($group->doc->title)?$group->doc->title:$group->doc->url;
+                    $res ->headline  = isset($group->doc->headline)?$group->doc->headline:null;
+                    $res ->passages  = isset($group->doc->passages->passage)?$group->doc->passages->passage:null;
+                    $res ->sitelinks = isset($group->doc->snippets->sitelinks->link)?$group->doc->snippets->sitelinks->link:null;
+                    
+                    array_push($this->results, $res);
+                }
+            }
+        }
+        return $this->results;
     }
 
     /**
@@ -615,6 +677,7 @@ class Yandex
 
         if ($pages < 10) {
             $pagebar = array_fill(0, $pages, array('type'=>'link', 'text'=>'%d'));
+            $pagebar[$this->page] = array('type'=>'current', 'text'=>'<b>%d</b>');
         } elseif ($pages >= 10 && $this->page < 9) {
             $pagebar = array_fill(0, 10, array('type'=>'link', 'text'=>'%d'));
             $pagebar[$this->page] = array('type'=>'current', 'text'=>'<b>%d</b>');

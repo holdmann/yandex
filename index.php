@@ -24,8 +24,8 @@ if ($query) {
             -> cat($cat)                        // set category - http://search.yaca.yandex.ru/cat.c2n
             -> theme($theme)                    // set theme - http://help.yandex.ru/site/?id=1111797
             -> sortby(Yandex::SORT_RLV)
-            -> groupby(Yandex::GROUP_SITE,
-                      Yandex::GROUP_MODE_DEEP)
+            -> groupby(Yandex::GROUP_DEFAULT,
+                       Yandex::GROUP_MODE_FLAT)
             
             -> set('max-title-length',   160)   // set some options
             -> set('max-passage-length', 200)
@@ -58,31 +58,35 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query)
 <div class="body">
     <div class="form">    
         <form>
-            <span><b>Я</b>ндекс</span>,&nbsp;<input type="text" name="query" class="txt" value="<?php echo $query;?>"/>, 
-            <input type="submit" class="smb" name="search" value="Ищи!"/><br /><br />
-            
-            <span>Регион</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="geo">
-                <option value="">Все</option>
-                <optgroup label="Город">
-                    <option value="213" <?php if ($geo == 213) echo 'selected="selected"'?>>Москва</option>
-                    <option value="2"   <?php if ($geo == 2)   echo 'selected="selected"'?>>Санкт-Петербург</option>
-                    <option value="143" <?php if ($geo == 143) echo 'selected="selected"'?>>Киев</option>
-                    <option value="157" <?php if ($geo == 157) echo 'selected="selected"'?>>Минск</option>
-                </optgroup>
-                <optgroup label="Страна">
-                    <option value="225" <?php if ($geo == 225) echo 'selected="selected"'?>>Россия</option>
-                    <option value="187" <?php if ($geo == 187) echo 'selected="selected"'?>>Украина</option>
-                    <option value="149" <?php if ($geo == 149) echo 'selected="selected"'?>>Беларусь</option>
-                </optgroup>
-            </select><br />
-            <span>Категория</span>:&nbsp;<select name="cat">
-                <option value="">Все</option>
-                <option value="5"    <?php if ($cat == 5) echo 'selected="selected"'?>>Интернет</option>
-                <option value="3795" <?php if ($cat == 3795) echo 'selected="selected"'?>>Кино</option>
-                <option value="3796" <?php if ($cat == 3796) echo 'selected="selected"'?>>Музыка</option>
-                <option value="3797" <?php if ($cat == 3797) echo 'selected="selected"'?>>Литература</option>
-                <option value="3798" <?php if ($cat == 3798) echo 'selected="selected"'?>>Фото</option>
-            </select>
+            <fieldset>
+                &nbsp;&nbsp;&nbsp;
+                <img src="http://www.ya.ru/logo.png" alt="Яндекс"/>,&nbsp;<input type="text" name="query" class="txt" value="<?php echo $query;?>"/>, 
+                <input type="submit" class="smb" name="search" value="Ищи!"/><br /><br />
+                <span>Регион</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="geo">
+                    <option value="">Все</option>
+                    <optgroup label="Город">
+                        <option value="213" <?php if ($geo == 213) echo 'selected="selected"'?>>Москва</option>
+                        <option value="2"   <?php if ($geo == 2)   echo 'selected="selected"'?>>Санкт-Петербург</option>
+                        <option value="143" <?php if ($geo == 143) echo 'selected="selected"'?>>Киев</option>
+                        <option value="157" <?php if ($geo == 157) echo 'selected="selected"'?>>Минск</option>
+                    </optgroup>
+                    <optgroup label="Страна">
+                        <option value="225" <?php if ($geo == 225) echo 'selected="selected"'?>>Россия</option>
+                        <option value="187" <?php if ($geo == 187) echo 'selected="selected"'?>>Украина</option>
+                        <option value="149" <?php if ($geo == 149) echo 'selected="selected"'?>>Беларусь</option>
+                    </optgroup>
+                </select><br />
+                <span>Категория</span>:&nbsp;<select name="cat">
+                    <option value="">Все</option>
+                    <option value="5"    <?php if ($cat == 5) echo 'selected="selected"'?>>Интернет</option>
+                    <option value="3795" <?php if ($cat == 3795) echo 'selected="selected"'?>>Кино</option>
+                    <option value="3796" <?php if ($cat == 3796) echo 'selected="selected"'?>>Музыка</option>
+                    <option value="3797" <?php if ($cat == 3797) echo 'selected="selected"'?>>Литература</option>
+                    <option value="3798" <?php if ($cat == 3798) echo 'selected="selected"'?>>Фото</option>
+                </select><br/>
+            </fieldset>
+            <input type="hidden" name="host"  value="<?php echo $host ?>"/>
+            <input type="hidden" name="theme" value="<?php echo $theme ?>"/>
         </form>
     </div>
     <!--<div class="request">
@@ -97,40 +101,24 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query)
         ?>
         
             <div class="result">
-            Найдено: <span><?php echo $Yandex->total() ?></span> 
-            <?php
-            switch (true) {
-                case ($Yandex->total() > 5 && $Yandex->total() < 20):
-                    echo 'страниц';
-                    break;
-                case ($Yandex->total()%10 == 1):
-                    echo 'страница';
-                    break;
-                case ($Yandex->total()%10 < 5):
-                    echo 'страницы';
-                    break;
-                default:
-                    echo 'страниц';
-                    break;
-            }
-            ?> 
+                <a href="http://www.yandex.ru/" title="Яндекс"><img src="http://www.ya.ru/logo.png" alt="Яндекс"/></a> <span><?php echo $Yandex->totalHuman() ?></span> 
             </div>
             <ol start="<?php echo $Yandex->getLimit()*$Yandex->getPage() + 1;?>">
-            <?php foreach ($Yandex->result->response->results->grouping->group as $group) :?>
-                <li><a href="<?php echo $group->doc->url; ?>" title="<?php echo $group->doc->url; ?>" ><?php Yandex::highlight($group->doc->title); ?></a>
-                    <?php if (isset($group->doc->headline)) : ?>
+            <?php foreach ($Yandex->results() as $result) :?>
+                <li><a href="<?php echo $result->url; ?>" title="<?php echo $result->url; ?>" ><?php Yandex::highlight($result->title); ?></a>
+                    <?php if ($result->headline) : ?>
                     <div class="headline">
-                        <?php echo $group->doc->headline; ?>
+                        <?php echo $result->headline; ?>
                     </div>
                     <?php endif; ?>
-                    <?php if (isset($group->doc->passages->passage)) : ?>
+                    <?php if ($result->passages) : ?>
                     <ul class="passages">
-                        <?php foreach ($group->doc->passages->passage as $passage) :?>
+                        <?php foreach ($result->passages as $passage) :?>
                         <li><?php Yandex::highlight($passage);?></li>                    
                         <?php endforeach;?>
                     </ul>
                     <?php endif; ?>
-                    <a href="<?php echo $group->doc->url; ?>" class="host" title="<?php echo $group->doc->url; ?>"><?php echo urldecode($group->doc->url); ?></a>
+                    <a href="<?php echo $result->url; ?>" class="host" title="<?php echo $result->url; ?>"><?php echo urldecode($result->url); ?></a>
                 </li>
             <?php endforeach;?>
             </ol>
@@ -153,11 +141,13 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query)
                 }
                 ?>
             <?php endforeach;?>
-            <?php if (($Yandex->getPage() < $Yandex->pages()) && 
-                      ($Yandex->pages() > 1)) : ?>
-                .. |
-                <a href="<?php echo $url;?>&page=<?php echo $Yandex->getPage()+1;?>" title="Next Page">&raquo;</a>
-            <?php endif; ?>
+            <?php /*if ($Yandex->pages() > 1 && $Yandex->getPage() != $Yandex->pages()-1) : ?>
+                <?php if ($Yandex->getPage() == $Yandex->pages() - 2):?>
+                    <a href="<?php echo $url;?>&page=<?php echo $Yandex->getPage()+1;?>" title="Next Page"><?php echo $Yandex->getPage()+2;?></a> 
+                <?php elseif ($Yandex->getPage() < $Yandex->pages()):?> .. |
+                    <a href="<?php echo $url;?>&page=<?php echo $Yandex->getPage()+1;?>" title="Next Page">&raquo;</a>
+                <?php endif; ?>            
+            <?php endif;*/ ?>            
             </div>
         <?php 
             // Error in response
@@ -185,7 +175,7 @@ $url = substr($url, 0, strpos($url, '?')) .'?query='.urlencode($query)
         </ul>
     </div>
     <div class="copyright">
-        &copy; 2008 <a href="http://anton.shevchuk.name" title="Anton Shevchuk">Anton Shevchuk</a><br/>
+        &copy; 2008-<?php echo date('Y') ?> <a href="http://anton.shevchuk.name" title="Anton Shevchuk">Anton Shevchuk</a><br/>
         Поиск реализован на основе <a href="http://xml.yandex.ru/" title="Яндекс.XML">Яндекс.XML</a>
     </div>
 </div>
