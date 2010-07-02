@@ -125,10 +125,22 @@ fieldset img{
     font-size:1.4em;
     padding:6px 40px;
     text-align:center;
+    background:#fff;
+    border:1px solid #ccc;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow:0 0 4px #CCC;
+    -moz-box-shadow:0 0 4px #CCC;
+    -webkit-box-shadow:0 0 4px #CCC
 }
 .result span {
     color:#333;
     font-size:1.4em;
+}
+.result img {
+    margin-bottom:-12px;
 }
 .pagebar {
     width:380px;
