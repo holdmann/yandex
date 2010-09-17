@@ -14,9 +14,19 @@ a { color: #FF3300; outline: none; }
 a:focus { outline: none; }
 
 img {border:0}
-
+p {margin:16px}
 form {margin:0;padding:0;display:inline}
-
+.box {
+    background:#fff;
+    border:1px solid #ccc;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow:0 0 4px #CCC;
+    -moz-box-shadow:0 0 4px #CCC;
+    -webkit-box-shadow:0 0 4px #CCC
+}
 .form {
     width:380px;
     margin:0 auto;
@@ -50,15 +60,6 @@ form {margin:0;padding:0;display:inline}
     font-size:1.0em;
 }
 fieldset {
-    background:#fff;
-    border:1px solid #ccc;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    box-shadow:0 0 4px #CCC;
-    -moz-box-shadow:0 0 4px #CCC;
-    -webkit-box-shadow:0 0 4px #CCC;
     padding:10px
 }
 
@@ -69,17 +70,12 @@ fieldset img{
     margin-top: 8px;
 }
 .data ol{
-    padding-left:20px;
+    padding-left:54px;
 }
 .data ol li{
     font-size:20px;
     color:#999;
     padding:8px;
-	border: 1px #ddd solid;	
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    -webkit-border-radius: 4px;
     margin-bottom: 6px;
 }
 .data ol li * {
@@ -88,12 +84,6 @@ fieldset img{
 .data ol li li {
     color:#333333;
     font-size:14px !important;
-}
-.data ol > li{
-    background:#fff;
-    box-shadow:0 0 4px #CCC;
-    -moz-box-shadow:0 0 4px #CCC;
-    -webkit-box-shadow:0 0 4px #CCC;
 }
 .data ol li:hover{
     background-color:#FFFFDD;
@@ -107,6 +97,7 @@ fieldset img{
     color:#999;
     font-size:0.6em;
     display:inline;
+    padding-left:8px;
 }
 
 .data ul{
@@ -124,30 +115,18 @@ fieldset img{
 .result {
     color:#777;
     font-size:1.4em;
-    padding:6px 40px;
-    text-align:center;
-    background:#fff;
-    border:1px solid #ccc;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    box-shadow:0 0 4px #CCC;
-    -moz-box-shadow:0 0 4px #CCC;
-    -webkit-box-shadow:0 0 4px #CCC
+
 }
-.result span {
-    color:#333;
-    font-size:1.4em;
-}
-.result img {
-    margin-bottom:-12px;
+.result p {
+    text-align:center
 }
 .pagebar {
-    width:380px;
+    width:100%;
     font-size:1.4em;
-    padding:6px;
     margin:0 auto
+}
+.pagebar p {
+    text-align:center
 }
 
 .error {
@@ -157,7 +136,6 @@ fieldset img{
 .download {
     width:100%;
     margin: 6px 0;
-    padding:8px;
     background-color:#FFFFCC;
     box-shadow:0 0 2px #EE5555;
     -moz-box-shadow:0 0 2px #EE5555;

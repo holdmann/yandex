@@ -44,23 +44,37 @@ $url = $server .'?query='.urlencode($query)
                .'&theme='.urlencode($theme)
                ;
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Yandex XML Search</title>
     <meta name="keywords" content="Yandex XML, PHP, PHP5" />
-    <meta name="description" content="Yandex XML Search for PHP" />    
+    <meta name="description" content="Yandex XML Search for PHP" />
+    <link rel="profile" href="http://gmpg.org/xfn/11"/>
     <link rel="stylesheet" href="styles.css" type="text/css" />
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-7269638-9']);
+  _gaq.push(['_setDomainName', '.hohli.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </head>
 <body>
 <div class="body">
     <div class="form">    
         <form>
-            <fieldset>
+            <fieldset class="box">
                 &nbsp;&nbsp;&nbsp;
-                <img src="http://www.ya.ru/logo.png" alt="Яндекс"/>,&nbsp;<input type="text" name="query" class="txt" value="<?php echo $query;?>"/>, 
+                <a href="http://www.yandex.ru/" title="Яндекс"><img src="http://www.ya.ru/logo.png" alt="Яндекс"/></a>,&nbsp;<input type="text" name="query" class="txt" value="<?php echo $query;?>"/>, 
                 <input type="submit" class="smb" name="search" value="Ищи!"/><br /><br />
                 <span>Регион</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="geo">
                     <option value="">Все</option>
@@ -89,23 +103,17 @@ $url = $server .'?query='.urlencode($query)
             <input type="hidden" name="theme" value="<?php echo $theme ?>"/>
         </form>
     </div>
-    <!--<div class="request">
-        <pre>
-        <?php echo htmlentities($request) ?>
-        </pre>
-    </div>-->
     <div class="data">
         <?php 
             // if $Yandex exists and don't have errors in response
             if (isset($Yandex) && empty($Yandex->error)) : 
         ?>
-        
-            <div class="result">
-                <a href="http://www.yandex.ru/" title="Яндекс"><img src="http://www.ya.ru/logo.png" alt="Яндекс"/></a> <span><?php echo $Yandex->totalHuman() ?></span> 
+            <div class="result box">
+                <p><?php echo $Yandex->totalHuman() ?></p>
             </div>
             <ol start="<?php echo $Yandex->getLimit()*$Yandex->getPage() + 1;?>">
             <?php foreach ($Yandex->results() as $result) :?>
-                <li><a href="<?php echo $result->url; ?>" title="<?php echo $result->url; ?>" class="title"><?php Yandex::highlight($result->title); ?></a>
+                <li class="box"><a href="<?php echo $result->url; ?>" title="<?php echo $result->url; ?>" class="title"><?php Yandex::highlight($result->title); ?></a>
                     <?php if ($result->headline) : ?>
                     <div class="headline">
                         <?php echo $result->headline; ?>
@@ -123,7 +131,8 @@ $url = $server .'?query='.urlencode($query)
                 </li>
             <?php endforeach;?>
             </ol>
-            <div class="pagebar">
+            <div class="pagebar box">
+            <p>
             <?php foreach ($Yandex->pageBar() as $page => $value) : ;?>
                 <?php // switch statement for $value['type']
                 switch ($value['type']) {
@@ -149,6 +158,7 @@ $url = $server .'?query='.urlencode($query)
                     <a href="<?php echo $url;?>&page=<?php echo $Yandex->getPage()+1;?>" title="Next Page">&raquo;</a>
                 <?php endif; ?>            
             <?php endif;*/ ?>            
+            </p>
             </div>
         <?php 
             // Error in response
@@ -158,6 +168,7 @@ $url = $server .'?query='.urlencode($query)
         <?php endif; ?>
     </div>
     <div class="download">
+        <p>
         Демонстрация работы PHP скрипта с поисковым сервисом Яндекс.XML.<br/>
         Последняя версия всегда доступна на страницах Code Google:<br/>
         <code>
@@ -170,24 +181,21 @@ $url = $server .'?query='.urlencode($query)
         </code>
         
         Для организации поиска по регионам или категориям смотрите коды на следующих страницах:
+        </p>
         <ul>
             <li><a href="http://search.yaca.yandex.ru/geo.c2n">Коды регионов</a></li>
             <li><a href="http://search.yaca.yandex.ru/cat.c2n">Коды рубрик</a></li>
         </ul>
     </div>
+    <!--<div class="request">
+        <pre>
+        <?php echo htmlentities($request) ?>
+        </pre>
+    </div>-->
     <div class="copyright">
         &copy; 2008-<?php echo date('Y') ?> <a href="http://anton.shevchuk.name" title="Anton Shevchuk">Anton Shevchuk</a><br/>
         Поиск реализован на основе <a href="http://xml.yandex.ru/" title="Яндекс.XML">Яндекс.XML</a>
     </div>
 </div>
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-7269638-9");
-pageTracker._trackPageview();
-} catch(err) {}</script>
 </body>
 </html>
