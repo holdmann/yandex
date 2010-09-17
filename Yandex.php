@@ -8,7 +8,7 @@
  * @link     http://anton.shevchuk.name
  * @access   public
  * @package  Yandex
- * @version  0.9
+ * @version  0.10.0
  * @created  Thu Aug 14 12:12:54 EEST 2008
  */
 class Yandex
@@ -16,9 +16,17 @@ class Yandex
     /**
      * Response
      *
+     * @see http://help.yandex.ru/xml/?id=362990
      * @var SimpleXML
      */
     public $response;
+
+    /**
+     * Wordstat array
+     *
+     * @var Array
+     */
+    public $wordstat = array();
     
     /**
      * Response in array
@@ -541,7 +549,9 @@ class Yandex
 
         $this->response = new SimpleXMLElement($data);
         $this->response = $this->response->response;
-        $this->checkErrors();
+        if ($this->_checkErrors()) {
+            $this->_bindData();
+        }
 
         return $this;
     }
@@ -566,7 +576,7 @@ class Yandex
      * @access  public
      * @return  void
      */
-    protected function checkErrors()
+    protected function _checkErrors()
     {
         // switch statement for $this->response->error
         switch (true) {
@@ -588,7 +598,28 @@ class Yandex
                 $this->error = null;
                 break;
         }
+
+        if ($this->error) {
+            return false;
+        } else {
+            return true;
+        }
     }
+
+    /**
+     * bindData
+     *
+     * @return void
+     */
+     protected function _bindData()
+     {
+         $wordstat = split(',',$this->response->wordstat);
+         $this->wordstat = array();
+         foreach ($wordstat as $word) {
+             list($word, $count) = split(":", $word);
+             $this->wordstat[$word] = intval(trim($count));
+         }
+     }
 
     /**
      * get total results
@@ -663,12 +694,10 @@ class Yandex
     }
 
     /**
-     * pageBar
-     *
-     * return pagebar
+     * return pagebar array
      *
      * @access  public
-     * @return  rettype  return
+     * @return  array
      */
     public function pageBar()
     {
@@ -692,17 +721,14 @@ class Yandex
         return $pagebar;
     }
 
-
     /**
-     * highlight
-     *
      * highlight text
      *
      * @access  public
      * @param   SimpleXML $xml  
      * @return  rettype   return
      */     
-    static function highlight($xml)
+    static public function highlight($xml)
     {
         // FIXME: very strangely method
         $text = $xml->asXML();
