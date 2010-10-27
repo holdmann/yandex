@@ -6,9 +6,9 @@
  *
  * @author   Anton Shevchuk <AntonShevchuk@gmail.com>
  * @link     http://anton.shevchuk.name
- * @access   public
+ * @link     http://yandex.hohli.com
  * @package  Yandex
- * @version  0.10.0
+ * @version  0.11.0
  * @created  Thu Aug 14 12:12:54 EEST 2008
  */
 class Yandex
@@ -48,6 +48,20 @@ class Yandex
      * @var string
      */
     public $totalHuman = null;
+
+    /**
+     * User
+     *
+     * @var string
+     */
+    protected $user;
+
+    /**
+     * Key
+     *
+     * @var string
+     */
+    protected $key;
 
     /**
      * Query
@@ -186,6 +200,20 @@ class Yandex
         19 => 'Заданы несовместимые параметры запроса — проверьте корректность группировочных атрибутов',
         20 => 'Неизвестная ошибка — при повторяемости ошибки обратитесь к разработчикам с описанием проблемы',
     );
+
+    /**
+     * __construct
+     *
+     * @return Yandex
+     */
+     public function __construct($user, $key)
+     {
+         if (empty($user) or empty($key)) {
+             throw new Exception('Yandex: username and key is requeried');
+         }
+         $this->user = $user;
+         $this->key  = $key;
+     }
 
     /**
      * query
@@ -473,7 +501,7 @@ class Yandex
         if (empty($this->query)
             && empty($this->host)
             ) {
-            throw new Exception('Query is empty');
+            throw new Exception('Yandex: Query is empty');
         }
 
         $xml = new SimpleXMLElement("<?xml version='1.0' encoding='utf-8'?><request></request>");
@@ -531,12 +559,15 @@ class Yandex
 
         $ch = curl_init();
 
+        $url = 'http://xmlsearch.yandex.ru/xmlsearch'
+             . '?user='.$this->user
+             . '&key='.$this->key;
+
         if ($this->lr) {
-            curl_setopt($ch, CURLOPT_URL, "http://xmlsearch.yandex.ru/xmlsearch?lr=".$this->lr);
-        } else {
-            curl_setopt($ch, CURLOPT_URL, "http://xmlsearch.yandex.ru/xmlsearch");
+            $url .= '&lr='.$this->lr;
         }
 
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept: application/xml"));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

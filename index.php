@@ -11,8 +11,12 @@ $theme = isset($_REQUEST['theme']) ?$_REQUEST['theme']:null;
 
 
 if ($query) {
+    // Your data http://xmlsearch.yandex.ru/xmlsearch?user=AntonShevchuk&key=03.28303679:b340c90e875df328e6e120986c837284
+    $user = 'AntonShevchuk';
+    $key  = '03.28303679:b340c90e875df328e6e120986c837284';
+
     // Create new instance of Yandex class
-    $Yandex = new Yandex();
+    $Yandex = new Yandex($user, $key);
     
     // Set Query
     $Yandex -> query($query)
@@ -31,6 +35,8 @@ if ($query) {
             -> set('max-passage-length', 200)
             -> request()                        // send request
             ;
+
+    // Debug request
     $request = $Yandex -> getRequest()->asXml();
 }
 
@@ -113,6 +119,17 @@ $url = $server .'?query='.urlencode($query)
             </div>
             <ol start="<?php echo $Yandex->getLimit()*$Yandex->getPage() + 1;?>">
             <?php foreach ($Yandex->results() as $result) :?>
+                <?php
+                    /*
+                    $result is Object with next properties:
+                        ->url
+                        ->domain
+                        ->title
+                        ->headline
+                        ->passages // array
+                        ->sitelinks // array
+                    */
+                ?>
                 <li class="box"><a href="<?php echo $result->url; ?>" title="<?php echo $result->url; ?>" class="title"><?php Yandex::highlight($result->title); ?></a>
                     <?php if ($result->headline) : ?>
                     <div class="headline">
