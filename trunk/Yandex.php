@@ -8,7 +8,7 @@
  * @link     http://anton.shevchuk.name
  * @link     http://yandex.hohli.com
  * @package  Yandex
- * @version  0.11.0
+ * @version  0.12.0
  * @created  Thu Aug 14 12:12:54 EEST 2008
  */
 class Yandex
@@ -512,9 +512,9 @@ class Yandex
         // if isset "host"
         if ($this->host) {
             if (is_array($this->host)) {
-                $host_query = '(host="'.join($this->host, '"|host="') .'")';
+                $host_query = '(host:"'.join($this->host, '"|host:"') .'")';
             } else {
-                $host_query = 'host="'.$this->host.'"';
+                $host_query = 'host:"'.$this->host.'"';
             }
 
             if (!empty($query) && $this->host) {
@@ -526,17 +526,17 @@ class Yandex
 
         // if isset "cat"
         if ($this->cat) {
-            $query .=  ' << cat=('.($this->cat+9000000).')';
+            $query .=  ' << cat:('.($this->cat+9000000).')';
         }
         
         // if isset "theme"
         if ($this->theme) {
-            $query .=  ' << cat=('.($this->theme+4000000).')';
+            $query .=  ' << cat:('.($this->theme+4000000).')';
         }
 
         // if isset "geo"
         if ($this->geo) {
-            $query .=  ' << cat=('.($this->geo+11000000).')';
+            $query .=  ' << cat:('.($this->geo+11000000).')';
         }
 
         $xml -> addChild('query', $query);
