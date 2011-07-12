@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['ttl'])) {
+    $_SESSION['ttl'] = microtime(true);
+}
+
 require_once 'Yandex.php';
 
 // get "query" and "page" from request
@@ -9,8 +14,8 @@ $geo   = isset($_REQUEST['geo']) ?$_REQUEST['geo']:null;
 $cat   = isset($_REQUEST['cat']) ?$_REQUEST['cat']:null;
 $theme = isset($_REQUEST['theme']) ?$_REQUEST['theme']:null;
 
-
-if ($query) {
+// small protection for example script
+if ($query && (microtime(true) - $_SESSION['ttl']) > 2) {
     // Your data http://xmlsearch.yandex.ru/xmlsearch?user=AntonShevchuk&key=03.28303679:b340c90e875df328e6e120986c837284
     $user = 'AntonShevchuk';
     $key  = '03.28303679:b340c90e875df328e6e120986c837284';

@@ -1,14 +1,12 @@
 <?php
 /**
- * Class Yandex
- *
- * yandex search class
+ * Class Yandex for work with Yandex.XML
  *
  * @author   Anton Shevchuk <AntonShevchuk@gmail.com>
  * @link     http://anton.shevchuk.name
  * @link     http://yandex.hohli.com
  * @package  Yandex
- * @version  0.12.0
+ * @version  0.13.0
  * @created  Thu Aug 14 12:12:54 EEST 2008
  */
 class Yandex
@@ -199,11 +197,21 @@ class Yandex
         18 => 'Ошибка в XML-запросе — проверьте валидность отправляемого XML и корректность параметров',
         19 => 'Заданы несовместимые параметры запроса — проверьте корректность группировочных атрибутов',
         20 => 'Неизвестная ошибка — при повторяемости ошибки обратитесь к разработчикам с описанием проблемы',
+        31 => 'Пользователь не зарегистрирован на сервисе — проверьте, что запросы отправляются от лица правильного пользователя',
+        32 => 'Лимит запросов исчерпан — увеличьте лимит запросов, став партнёром Рекламной Сети Яндекса',
+        33 => 'Запрос пришёл с IP-адреса, не входящего в список разрешённых — настройте правильный IP-адрес',
+        34 => 'Пользователь не зарегистрирован в Яндекс.Паспорте — проверьте, что запросы отправляются от лица правильного пользователя',
+        37 => 'Неверное значение параметра запроса — проверьте полноту и корректность отправляемых вами параметров запроса',
+        42 => 'Ключ неверен — проверьте, что вы используете правильный адрес для совершения запросов, выданный вам на странице настроек',
+        43 => 'Версия ключа неверна — скопируйте со страницы настроек новый адрес для совершения запросов и используйте его',
+        44 => 'Данный адрес для совершения запросов больше не поддерживается — используйте адрес, выданный вам на странице настроек',
     );
 
     /**
      * __construct
      *
+     * @param string $user
+     * @param string $key
      * @return Yandex
      */
      public function __construct($user, $key)
@@ -242,7 +250,6 @@ class Yandex
     /**
      * page
      *
-     * @access  public
      * @param   integer   $page
      * @return  Yandex
      */
@@ -255,7 +262,6 @@ class Yandex
     /**
      * getPage
      *
-     * @access  public
      * @return  integer
      */
     public function getPage()
@@ -266,7 +272,6 @@ class Yandex
     /**
      * limit
      *
-     * @access  public
      * @param   integer   $limit
      * @return  Yandex
      */
@@ -279,7 +284,6 @@ class Yandex
     /**
      * getLimit
      *
-     * @access  public
      * @return  integer
      */
     public function getLimit()
@@ -290,7 +294,6 @@ class Yandex
     /**
      * host
      *
-     * @access  public
      * @param   string   $host
      * @return  Yandex
      */
@@ -303,7 +306,6 @@ class Yandex
     /**
      * getHost
      *
-     * @access  public
      * @return  string
      */
     public function getHost()
@@ -312,9 +314,30 @@ class Yandex
     }
 
     /**
+     * site
+     *
+     * @param   string   $site
+     * @return  Yandex
+     */
+    public function site($site)
+    {
+        $this->site = $site;
+        return $this;
+    }
+
+    /**
+     * getSite
+     *
+     * @return  string
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
      * cat
      *
-     * @access  public
      * @param   integer   $cat
      * @return  Yandex
      */
@@ -327,7 +350,6 @@ class Yandex
     /**
      * getCat
      *
-     * @access  public
      * @return  integer
      */
     public function getCat()
@@ -338,7 +360,6 @@ class Yandex
     /**
      * geo
      *
-     * @access  public
      * @param   integer   $geo
      * @return  Yandex
      */
@@ -351,7 +372,6 @@ class Yandex
     /**
      * getGeo
      *
-     * @access  public
      * @return  integer
      */
     public function getGeo()
@@ -362,7 +382,6 @@ class Yandex
     /**
      * theme
      *
-     * @access  public
      * @param   integer   $theme
      * @return  Yandex
      */
@@ -375,7 +394,6 @@ class Yandex
     /**
      * getTheme
      *
-     * @access  public
      * @return  integer
      */
     public function getTheme()
@@ -386,7 +404,6 @@ class Yandex
     /**
      * lr
      *
-     * @access  public
      * @param   integer   $lr
      * @return  Yandex
      */
@@ -399,7 +416,6 @@ class Yandex
     /**
      * getLr
      *
-     * @access  public
      * @return  integer
      */
     public function getLr()
@@ -410,7 +426,6 @@ class Yandex
     /**
      * sortby
      *
-     * @access  public
      * @param   string   $sortby
      * @return  Yandex
      */
@@ -424,7 +439,6 @@ class Yandex
     /**
      * getSortby
      *
-     * @access  public
      * @return  string
      */
     public function getSortby()
@@ -433,11 +447,11 @@ class Yandex
     }
 
     /**
-     * groupby
+     * setup groupby
      *
-     * @access  public
-     * @param   string   $groupby
-     * @return  Yandex
+     * @param  string $groupby
+     * @param  string $mode
+     * @return Yandex
      */
     public function groupby($groupby, $mode = Yandex::GROUP_MODE_FLAT)
     {
@@ -453,9 +467,8 @@ class Yandex
     }
 
     /**
-     * getGroupby
+     * get groupby
      *
-     * @access  public
      * @return  string
      */
     public function getGroupby()
@@ -466,7 +479,6 @@ class Yandex
     /**
      * getGroupbyMode
      *
-     * @access  public
      * @return  string
      */
     public function getGroupbyMode()
@@ -477,7 +489,6 @@ class Yandex
     /**
      * set
      *
-     * @access  public
      * @param   string   $option
      * @param   mixed    $value
      * @return  Yandex
@@ -489,11 +500,8 @@ class Yandex
     }
 
     /**
-     * request
-     *
      * send request
      *
-     * @access  public
      * @return  Yandex  
      */
     public function request()
@@ -512,15 +520,30 @@ class Yandex
         // if isset "host"
         if ($this->host) {
             if (is_array($this->host)) {
-                $host_query = '(host:"'.join($this->host, '"|host:"') .'")';
+                $host_query = '(host:"'.join('" | host:"', $this->host) .'")';
             } else {
                 $host_query = 'host:"'.$this->host.'"';
             }
 
             if (!empty($query) && $this->host) {
-                $query .=  ' << '.$host_query;
+                $query .=  ' '.$host_query;
             } elseif (empty($query) && $this->host) {
                 $query .=  $host_query;
+            }
+        }
+
+        // if isset "site"
+        if ($this->site) {
+            if (is_array($this->site)) {
+                $site_query = '(site:"'.join('" | site:"', $this->site) .'")';
+            } else {
+                $site_query = 'site:"'.$this->site.'"';
+            }
+
+            if (!empty($query) && $this->site) {
+                $query .=  ' '.$site_query;
+            } elseif (empty($query) && $this->site) {
+                $query .=  $site_query;
             }
         }
 
@@ -588,11 +611,9 @@ class Yandex
     }
 
     /**
-     * Get request
+     * Get last request as string
      *
-     * return last request as string
-     * 
-     * @param string $request
+     * @return string
      */
     public function getRequest()
     {
@@ -600,12 +621,9 @@ class Yandex
     }
 
     /**
-     * checkErrors
-     *
      * check response errors
      *
-     * @access  public
-     * @return  void
+     * @return  boolean
      */
     protected function _checkErrors()
     {
@@ -644,18 +662,17 @@ class Yandex
      */
      protected function _bindData()
      {
-         $wordstat = split(',',$this->response->wordstat);
+         $wordstat = preg_split(',', $this->response->wordstat);
          $this->wordstat = array();
          foreach ($wordstat as $word) {
-             list($word, $count) = split(":", $word);
+             list($word, $count) = preg_split(':', $word);
              $this->wordstat[$word] = intval(trim($count));
          }
      }
 
     /**
      * get total results
-     * 
-     * @access  public
+     *
      * @return  integer
      */
     public function total()
@@ -669,9 +686,8 @@ class Yandex
 
     /**
      * get total results in human form
-     * 
-     * @access  public
-     * @return  integer
+     *
+     * @return  string
      */
     public function totalHuman()
     {
@@ -683,13 +699,9 @@ class Yandex
     }
 
     /**
-     * pages
-     *
      * get total pages
      *
-     * @access  public
-     * @param   type     $param  param_descr
-     * @return  rettype  return
+     * @return  integer
      */
     public function pages()
     {
@@ -727,7 +739,6 @@ class Yandex
     /**
      * return pagebar array
      *
-     * @access  public
      * @return  array
      */
     public function pageBar()
@@ -755,9 +766,8 @@ class Yandex
     /**
      * highlight text
      *
-     * @access  public
      * @param   SimpleXML $xml  
-     * @return  rettype   return
+     * @return  void
      */     
     static public function highlight($xml)
     {
