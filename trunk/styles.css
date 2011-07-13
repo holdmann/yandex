@@ -70,6 +70,7 @@ fieldset img{
     margin-top: 8px;
 }
 .data ol{
+    margin-left:-54px;
     padding-left:54px;
 }
 .data ol li{

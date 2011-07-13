@@ -81,6 +81,20 @@ class Yandex
      * @var string
      */
     protected $host;
+    
+    /**
+     * Site
+     *
+     * @var string
+     */
+    protected $site;
+    
+    /**
+     * Domain
+     *
+     * @var string
+     */
+    protected $domain;
 
     /**
      * cat
@@ -334,6 +348,27 @@ class Yandex
     {
         return $this->site;
     }
+    /**
+     * domain
+     *
+     * @param   string   $domain
+     * @return  Yandex
+     */
+    public function domain($domain)
+    {
+        $this->domain = $domain;
+        return $this;
+    }
+
+    /**
+     * getDomain
+     *
+     * @return  string
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
 
     /**
      * cat
@@ -546,20 +581,34 @@ class Yandex
                 $query .=  $site_query;
             }
         }
+        
+        // if isset "domain"
+        if ($this->domain) {
+            if (is_array($this->domain)) {
+                $domain_query = '(domain:'.join(' | domain:', $this->domain) .')';
+            } else {
+                $domain_query = 'domain:'.$this->domain;
+            }
+            if (!empty($query) && $this->domain) {
+                $query .=  ' '.$domain_query;
+            } elseif (empty($query) && $this->domain) {
+                $query .=  $domain_query;
+            }
+        }
 
         // if isset "cat"
         if ($this->cat) {
-            $query .=  ' << cat:('.($this->cat+9000000).')';
+            $query .=  ' cat:'.($this->cat+9000000);
         }
         
         // if isset "theme"
         if ($this->theme) {
-            $query .=  ' << cat:('.($this->theme+4000000).')';
+            $query .=  ' cat:'.($this->theme+4000000);
         }
 
         // if isset "geo"
         if ($this->geo) {
-            $query .=  ' << cat:('.($this->geo+11000000).')';
+            $query .=  ' cat:'.($this->geo+11000000);
         }
 
         $xml -> addChild('query', $query);
@@ -662,10 +711,10 @@ class Yandex
      */
      protected function _bindData()
      {
-         $wordstat = preg_split(',', $this->response->wordstat);
+         $wordstat = preg_split('/,/', $this->response->wordstat);
          $this->wordstat = array();
          foreach ($wordstat as $word) {
-             list($word, $count) = preg_split(':', $word);
+             list($word, $count) = preg_split('/:/', $word);
              $this->wordstat[$word] = intval(trim($count));
          }
      }

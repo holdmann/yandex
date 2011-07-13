@@ -15,6 +15,7 @@ $cat   = isset($_REQUEST['cat']) ?$_REQUEST['cat']:null;
 $theme = isset($_REQUEST['theme']) ?$_REQUEST['theme']:null;
 
 // small protection for example script
+// only 2 seconds
 if ($query && (microtime(true) - $_SESSION['ttl']) > 2) {
     // Your data http://xmlsearch.yandex.ru/xmlsearch?user=AntonShevchuk&key=03.28303679:b340c90e875df328e6e120986c837284
     $user = 'AntonShevchuk';
@@ -26,15 +27,16 @@ if ($query && (microtime(true) - $_SESSION['ttl']) > 2) {
     // Set Query
     $Yandex -> query($query)
             -> host($host)                      // set one host or multihost
-            // -> host(array('anton.shevchuk.name','cotoha.info')) 
+            //-> host(array('anton.shevchuk.name','cotoha.info')) 
+            //-> site(array('anton.shevchuk.name','cotoha.info')) 
+            //-> domain(array('ru','org'))
             -> page($page)                      // set current page
             -> limit(10)                        // set page limit
             -> geo($geo)                        // set geo region - http://search.yaca.yandex.ru/geo.c2n
             -> cat($cat)                        // set category - http://search.yaca.yandex.ru/cat.c2n
             -> theme($theme)                    // set theme - http://help.yandex.ru/site/?id=1111797
             -> sortby(Yandex::SORT_RLV)
-            -> groupby(Yandex::GROUP_DEFAULT,
-                       Yandex::GROUP_MODE_FLAT)
+            -> groupby(Yandex::GROUP_DEFAULT)
             
             -> set('max-title-length',   160)   // set some options
             -> set('max-passage-length', 200)
@@ -209,9 +211,9 @@ $url = $server .'?query='.urlencode($query)
             <li><a href="http://search.yaca.yandex.ru/cat.c2n">Коды рубрик</a></li>
         </ul>
     </div>
-    <!--<div class="request">
+    <!--div class="request">
         <pre>
-        <?php echo htmlentities($request) ?>
+        <?php //echo htmlentities($request, ENT_QUOTES, "UTF-8") ?>
         </pre>
     </div>-->
     <div class="copyright">
